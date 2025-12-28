@@ -1,0 +1,1 @@
+*/5 * * * * python /app/etl.py >> /var/log/etl.log 2>&1

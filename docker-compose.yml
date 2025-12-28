@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: bcycle_postgres
+    environment:
+      POSTGRES_USER: bcycle
+      POSTGRES_PASSWORD: bcycle_pw
+      POSTGRES_DB: bcycle
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: bcycle_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: nolan@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  etl:
+    build:
+      context: .
+      dockerfile: scheduler.Dockerfile
+    container_name: bcycle_etl
+    environment:
+      GBFS_URL: https://gbfs.bcycle.com/bcycle_boulder/gbfs.json
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: bcycle
+      DB_USER: bcycle
+      DB_PASSWORD: bcycle_pw
+      HTTP_TIMEOUT_SECONDS: "10"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  pgadmin_data:
