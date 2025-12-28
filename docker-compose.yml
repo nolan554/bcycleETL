@@ -3,9 +3,9 @@ services:
     image: postgres:16-alpine
     container_name: bcycle_postgres
     environment:
-      POSTGRES_USER: bcycle
-      POSTGRES_PASSWORD: bcycle_pw
-      POSTGRES_DB: bcycle
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
@@ -16,8 +16,8 @@ services:
     image: dpage/pgadmin4:8
     container_name: bcycle_pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: nolan@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "5050:80"
     depends_on:
@@ -31,13 +31,13 @@ services:
       dockerfile: scheduler.Dockerfile
     container_name: bcycle_etl
     environment:
-      GBFS_URL: https://gbfs.bcycle.com/bcycle_boulder/gbfs.json
-      DB_HOST: db
-      DB_PORT: "5432"
-      DB_NAME: bcycle
-      DB_USER: bcycle
-      DB_PASSWORD: bcycle_pw
-      HTTP_TIMEOUT_SECONDS: "10"
+      GBFS_URL: ${GBFS_URL}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      HTTP_TIMEOUT_SECONDS: ${HTTP_TIMEOUT_SECONDS}
     depends_on:
       - db
 
