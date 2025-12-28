@@ -2,6 +2,13 @@
 
 This project collects Boulder B-Cycle GBFS data into Postgres. The queries below answer business-focused questions using the `dim_stations` and `fact_station_status` tables.
 
+## ML: Time-to-Empty Regression
+
+Baseline regression predicts minutes until a station becomes empty using recent status data.
+
+- Label query: `sql/05_label_time_to_empty.sql`
+- Training script: `ml/train_time_to_empty.py`
+
 ## Questions and SQL
 
 1) Average time a station stays empty or full
@@ -26,4 +33,10 @@ Example:
 
 ```sh
 sudo docker compose exec -T db psql -U bcycle -d bcycle -f sql/01_avg_empty_full_duration.sql
+```
+
+## Train the model
+
+```sh
+sudo docker compose exec -T etl python /app/ml/train_time_to_empty.py
 ```
